@@ -1,0 +1,34 @@
+name: 月次口コミ・評価自動更新
+
+on:
+  # 毎月1日 午前9時（JST）に自動実行
+  schedule:
+    - cron: '0 0 1 * *'
+  # 手動実行ボタンも用意（GitHub上から任意のタイミングで実行可能）
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # camps.json を書き換えてコミットするために必要
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 をセットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 口コミ・評価を更新
+        env:
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+        run: python scripts/update_ratings.py
+
+      - name: 変更があれば自動コミット＆プッシュ
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: 月次口コミ・評価データ自動更新"
+          file_pattern: "camps.json"

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>キャンプ場発掘ツール</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2d6a4f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CampFinder">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">⛺</span>
+        <span class="logo-text">キャンプ場発掘ツール</span>
+      </div>
+      <div class="header-sub">東日本の穴場キャンプ場を探そう</div>
+    </div>
+  </header>
+
+  <!-- フィルターパネル -->
+  <section class="filter-panel">
+    <div class="filter-inner">
+
+      <div class="filter-row">
+        <div class="filter-item">
+          <label class="filter-label">都道府県</label>
+          <select id="pref" class="filter-select">
+            <option value="">すべて</option>
+            <option>青森</option>
+            <option>岩手</option>
+            <option>宮城</option>
+            <option>秋田</option>
+            <option>山形</option>
+            <option>福島</option>
+            <option>茨城</option>
+            <option>栃木</option>
+            <option>群馬</option>
+            <option>埼玉</option>
+            <option>千葉</option>
+            <option>東京</option>
+            <option>神奈川</option>
+            <option>山梨</option>
+            <option>長野</option>
+            <option>新潟</option>
+            <option>静岡</option>
+            <option>愛知</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label class="filter-label">口コミ上限</label>
+          <select id="review" class="filter-select">
+            <option value="100">100件以内</option>
+            <option value="50">50件以内</option>
+            <option value="30">30件以内</option>
+            <option value="10" selected>10件以内</option>
+            <option value="5">5件以内</option>
+            <option value="0">0件</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label class="filter-label">並び順</label>
+          <select id="sort" class="filter-select">
+            <option value="asc">口コミ少ない順</option>
+            <option value="desc">口コミ多い順</option>
+            <option value="rating">評価高い順</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label class="filter-label">開設からの期間</label>
+          <select id="openPeriod" class="filter-select">
+            <option value="0">すべて</option>
+            <option value="1">1年以内</option>
+            <option value="2">2年以内</option>
+            <option value="3">3年以内</option>
+            <option value="5">5年以内</option>
+            <option value="10">10年以内</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-actions">
+        <button id="searchBtn" class="btn-search" onclick="searchCamp()">
+          <span class="btn-icon">🔍</span> 検索する
+        </button>
+        <button class="btn-reset" onclick="resetFilter()">
+          リセット
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 結果カウント -->
+  <div class="result-bar" id="resultBar" style="display:none;">
+    <span id="resultCount"></span>
+    <span class="result-hint">マーカーをタップで詳細表示</span>
+  </div>
+
+  <!-- 地図 -->
+  <div id="map"></div>
+
+  <!-- 結果リスト（スクロール可） -->
+  <section class="result-list" id="resultList" style="display:none;">
+    <h2 class="result-list-title">検索結果一覧</h2>
+    <div id="campCards"></div>
+  </section>
+
+  <!-- フッター -->
+  <footer class="footer">
+    <p>口コミ数・評価はGoogle Mapsデータを月1回自動更新。開設年・住所等は実際のキャンプ場情報でご確認ください。</p>
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js?v=3"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
+  </script>
+
+</body>
+</html>

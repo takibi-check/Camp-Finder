@@ -1,0 +1,560 @@
+/* ===== リセット & ベース ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --green-dark:   #1b4332;
+  --green-main:   #2d6a4f;
+  --green-mid:    #40916c;
+  --green-light:  #74c69d;
+  --green-pale:   #d8f3dc;
+  --accent:       #f4a261;
+  --accent-dark:  #e76f51;
+  --bg:           #f8faf9;
+  --card-bg:      #ffffff;
+  --text:         #1a1a1a;
+  --text-sub:     #555;
+  --border:       #d0e8d8;
+  --shadow:       0 2px 12px rgba(0,0,0,0.10);
+  --radius:       12px;
+  --font:         'Noto Sans JP', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ===== ヘッダー ===== */
+.header {
+  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-main) 100%);
+  color: #fff;
+  padding: 14px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.header-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  font-size: 24px;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.header-sub {
+  font-size: 12px;
+  opacity: 0.80;
+  margin-left: auto;
+}
+
+/* ===== フィルターパネル ===== */
+.filter-panel {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+  box-shadow: var(--shadow);
+}
+
+.filter-inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 14px;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 130px;
+}
+
+.filter-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green-main);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.filter-select {
+  appearance: none;
+  background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M0 0l6 8 6-8z' fill='%232d6a4f'/%3E%3C/svg%3E") no-repeat right 10px center;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 32px 8px 10px;
+  font-size: 14px;
+  font-family: var(--font);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--green-mid);
+  box-shadow: 0 0 0 3px rgba(64,145,108,0.15);
+}
+
+/* チェックボックス */
+.filter-check {
+  justify-content: flex-end;
+  padding-bottom: 2px;
+}
+
+.check-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.check-input {
+  display: none;
+}
+
+.check-box {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--green-mid);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  transition: background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.check-input:checked + .check-box {
+  background: var(--green-main);
+  border-color: var(--green-main);
+}
+
+.check-input:checked + .check-box::after {
+  content: '';
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+  display: block;
+}
+
+.check-text {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* ボタン */
+.filter-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-search {
+  background: linear-gradient(135deg, var(--green-mid), var(--green-main));
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 11px 28px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 3px 10px rgba(45,106,79,0.35);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-search:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(45,106,79,0.45);
+}
+
+.btn-search:active {
+  transform: translateY(0);
+}
+
+.btn-icon {
+  font-size: 16px;
+}
+
+.btn-reset {
+  background: transparent;
+  color: var(--text-sub);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 20px;
+  font-size: 14px;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-reset:hover {
+  background: var(--green-pale);
+}
+
+/* ===== 結果バー ===== */
+.result-bar {
+  background: var(--green-pale);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--green-dark);
+  font-weight: 500;
+}
+
+.result-hint {
+  font-size: 12px;
+  color: var(--green-mid);
+  opacity: 0.8;
+}
+
+/* ===== 地図 ===== */
+#map {
+  width: 100%;
+  height: 55vh;
+  min-height: 320px;
+  z-index: 1;
+}
+
+/* ===== 結果リスト ===== */
+.result-list {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 16px 30px;
+}
+
+.result-list-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--green-pale);
+}
+
+/* カード */
+.camp-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+
+.camp-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  border-color: var(--green-light);
+}
+
+.camp-card-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.camp-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.camp-card-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.camp-card-desc {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.camp-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--green-pale);
+  color: var(--green-dark);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.meta-badge.accent {
+  background: #fff3e8;
+  color: #c05621;
+}
+
+.meta-badge.new {
+  background: #e8f4fd;
+  color: #1a6fa8;
+}
+
+.camp-card-link {
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.btn-map {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--font);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.btn-map:hover {
+  background: var(--accent-dark);
+}
+
+/* ===== 空状態 ===== */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-sub);
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.empty-state-text {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* ===== フッター ===== */
+.footer {
+  background: var(--green-dark);
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+  padding: 16px;
+  font-size: 11px;
+}
+
+/* ===== Leaflet カスタム ===== */
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18) !important;
+  font-family: var(--font) !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  min-width: 200px;
+}
+
+.popup-inner {
+  padding: 14px 16px;
+}
+
+.popup-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin-bottom: 8px;
+}
+
+.popup-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.popup-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+.popup-label {
+  font-weight: 600;
+  color: var(--green-main);
+  min-width: 60px;
+}
+
+.popup-stars {
+  color: #f4a261;
+}
+
+.popup-link {
+  display: block;
+  background: var(--green-main);
+  color: #fff;
+  text-align: center;
+  padding: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 0 0 12px 12px;
+  transition: background 0.15s;
+}
+
+.popup-link:hover {
+  background: var(--green-dark);
+}
+
+.popup-new-badge {
+  display: inline-block;
+  background: #e8f4fd;
+  color: #1a6fa8;
+  border-radius: 20px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+/* ユーザー位置マーカー */
+.user-marker-icon {
+  width: 18px;
+  height: 18px;
+  background: #3b82f6;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.35);
+}
+
+/* カスタムキャンプマーカー */
+.camp-marker {
+  width: 32px;
+  height: 32px;
+  background: var(--green-main);
+  border: 2.5px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.camp-marker-inner {
+  transform: rotate(45deg);
+  font-size: 14px;
+}
+
+/* ===== レスポンシブ ===== */
+@media (max-width: 600px) {
+  .header-sub {
+    display: none;
+  }
+
+  .filter-row {
+    gap: 10px;
+  }
+
+  .filter-item {
+    min-width: calc(50% - 6px);
+    flex: 1 1 calc(50% - 6px);
+  }
+
+  .filter-check {
+    min-width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  #map {
+    height: 50vh;
+  }
+
+  .camp-card {
+    flex-wrap: wrap;
+  }
+
+  .camp-card-link {
+    width: 100%;
+    text-align: right;
+  }
+}
+
+@media (min-width: 768px) {
+  .filter-item {
+    flex: 1;
+  }
+
+  #map {
+    height: 60vh;
+  }
+}
