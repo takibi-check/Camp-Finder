@@ -100,12 +100,19 @@ function renderStars(rating) {
 // ===== ポップアップHTML =====
 function buildPopup(c, openPeriod) {
   const currentYear = new Date().getFullYear();
-  const yearsAgo = currentYear - c.open;
-  const isNew = openPeriod > 0 ? yearsAgo <= openPeriod : yearsAgo <= 3;
+  const openYear = c.open_year;
+  const yearsAgo = openYear ? currentYear - openYear : null;
+  const isNew = openPeriod > 0 && yearsAgo !== null ? yearsAgo <= openPeriod : false;
   const distText = userLatLng
     ? `${calcDistance(userLatLng.lat, userLatLng.lng, c.lat, c.lng)} km`
     : '—';
   const newBadge = isNew ? '<span class="popup-new-badge">NEW</span>' : '';
+  const openText = openYear
+    ? `${openYear}年（${yearsAgo === 0 ? '今年' : yearsAgo + '年前'}）`
+    : '情報なし';
+  const napLink = c.nap_url
+    ? `<a href="${c.nap_url}" target="_blank" rel="noopener" class="popup-link" style="background:#2d6a4f">📋 なっぷで見る</a>`
+    : '';
 
   return `
     <div class="popup-inner">
@@ -117,7 +124,7 @@ function buildPopup(c, openPeriod) {
         </div>
         <div class="popup-row">
           <span class="popup-label">口コミ数</span>
-          <span>${c.reviews} 件</span>
+          <span>${c.review_count} 件</span>
         </div>
         <div class="popup-row">
           <span class="popup-label">評価</span>
@@ -126,7 +133,7 @@ function buildPopup(c, openPeriod) {
         </div>
         <div class="popup-row">
           <span class="popup-label">開設年</span>
-          <span>${c.open}年（${yearsAgo === 0 ? '今年' : yearsAgo + '年前'}）</span>
+          <span>${openText}</span>
         </div>
         <div class="popup-row">
           <span class="popup-label">現在地から</span>
@@ -134,21 +141,25 @@ function buildPopup(c, openPeriod) {
         </div>
       </div>
     </div>
-    <a href="${c.map}" target="_blank" rel="noopener" class="popup-link">📍 Googleマップで開く</a>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;padding:4px 0">
+      <a href="${c.gmaps_url}" target="_blank" rel="noopener" class="popup-link">📍 Googleマップで開く</a>
+      ${napLink}
+    </div>
   `;
 }
 
 // ===== カードHTML =====
 function buildCard(c, index, openPeriod) {
   const currentYear = new Date().getFullYear();
-  const yearsAgo = currentYear - c.open;
-  const isNew = openPeriod > 0 ? yearsAgo <= openPeriod : yearsAgo <= 3;
+  const openYear = c.open_year;
+  const yearsAgo = openYear ? currentYear - openYear : null;
+  const isNew = openPeriod > 0 && yearsAgo !== null ? yearsAgo <= openPeriod : false;
   const distText = userLatLng
     ? `${calcDistance(userLatLng.lat, userLatLng.lng, c.lat, c.lng)} km`
     : null;
 
   const newBadge = isNew
-    ? `<span class="meta-badge new">🆕 ${c.open}年開設（${yearsAgo === 0 ? '今年' : yearsAgo + '年前'}）</span>` : '';
+    ? `<span class="meta-badge new">🆕 ${openYear}年開設（${yearsAgo === 0 ? '今年' : yearsAgo + '年前'}）</span>` : '';
   const distBadge = distText
     ? `<span class="meta-badge">📍 ${distText}</span>` : '';
 
@@ -157,17 +168,17 @@ function buildCard(c, index, openPeriod) {
       <div class="camp-card-icon">⛺</div>
       <div class="camp-card-body">
         <div class="camp-card-name">${c.name}</div>
-        <div class="camp-card-desc">${c.description || ''}</div>
+        <div class="camp-card-desc">${c.address || ''}</div>
         <div class="camp-card-meta">
           <span class="meta-badge">📍 ${c.prefecture}</span>
-          <span class="meta-badge">💬 口コミ ${c.reviews} 件</span>
+          <span class="meta-badge">💬 口コミ ${c.review_count} 件</span>
           <span class="meta-badge accent">⭐ ${c.rating}</span>
           ${newBadge}
           ${distBadge}
         </div>
       </div>
       <div class="camp-card-link">
-        <a href="${c.map}" target="_blank" rel="noopener" class="btn-map" onclick="event.stopPropagation()">
+        <a href="${c.gmaps_url}" target="_blank" rel="noopener" class="btn-map" onclick="event.stopPropagation()">
           地図を開く
         </a>
       </div>
@@ -204,14 +215,14 @@ window.searchCamp = async function() {
 
     let filtered = allCamps.filter(c => {
       if (pref && c.prefecture !== pref) return false;
-      if (c.reviews > reviewMax) return false;
-      if (openPeriod > 0 && (currentYear - c.open) > openPeriod) return false;
+      if (c.review_count > reviewMax) return false;
+      if (openPeriod > 0 && c.open_year && (currentYear - c.open_year) > openPeriod) return false;
       return true;
     });
 
     filtered.sort((a, b) => {
-      if (sort === 'asc')    return a.reviews - b.reviews;
-      if (sort === 'desc')   return b.reviews - a.reviews;
+      if (sort === 'asc')    return a.review_count - b.review_count;
+      if (sort === 'desc')   return b.review_count - a.review_count;
       if (sort === 'rating') return b.rating - a.rating;
       return 0;
     });
@@ -243,7 +254,7 @@ window.searchCamp = async function() {
     // マーカー & カード生成
     const bounds = [];
     filtered.forEach((c, i) => {
-      const marker = L.marker([c.lat, c.lng], { icon: createCampIcon(c.reviews) })
+      const marker = L.marker([c.lat, c.lng], { icon: createCampIcon(c.review_count) })
         .addTo(map)
         .bindPopup(buildPopup(c, openPeriod), { maxWidth: 260 });
       markers.push(marker);
