@@ -1,4 +1,4 @@
-const CACHE_NAME = 'camp-finder-v3';
+const CACHE_NAME = 'camp-finder-v4';
 const ASSETS = [
   '/',
   '/index.html',
